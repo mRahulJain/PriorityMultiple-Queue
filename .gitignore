@@ -1,52 +1,174 @@
-# Prerequisites
-*.d
+#include<stdio.h>
+#include<stdlib.h>
+static int count1=0, count2=0, count3=0;
+struct emp {
+	int priority;
+	int data;
+	struct node *next;
+};
+struct emp *f1=NULL,*f2=NULL,*f3=NULL,*r1=NULL,*r2=NULL,*r3=NULL,*k,*p;
+void insert() {
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+	k = (struct emp*)malloc(sizeof(struct emp));
+	printf("\nEnter data: ");
+	scanf("%d",&k->data);
+	printf("\nEnter priority(1, 2 or 3): ");
+	scanf("%d",&k->priority);
+	k->next=NULL;
 
-# Linker output
-*.ilk
-*.map
-*.exp
+	if(k->priority==1 && count1>=3)
+    {
+		k->priority = 2;
+	}
 
-# Precompiled Headers
-*.gch
-*.pch
+	if(k->priority==2 && count2>=2)
+    {
+		k->priority = 3;
+	}
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+	if(k->priority==3 && count3>=1)
+    {
+		printf("\nQueue Overflow");
+		return;
+	}
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+	if(k->priority==1)
+    {
+		if(f1==NULL)
+		{
+			f1 = k;
+			r1 = k;
+		} else {
+			r1->next=k;
+			r1=k;
+		}
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+		if(f2!=NULL) {
+			r1->next=f2;
+		} else if(f3!=NULL) {
+			r1->next=f3;
+		} else {
+			r1->next=NULL;
+		}
+		count1++;
+	}
+    else if(k->priority==2)
+    {
+	       if(f2==NULL)
+	       {
+			f2 = k;
+			r2 = k;
+	       }
+	       else
+	       {
+			r2->next=k;
+			r2=k;
+	       }
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+	       if(r1!=NULL)
+           {
+			r1->next=f2;
+	       }
+	       if(f3!=NULL)
+	       {
+			r2->next=f3;
+	       }
+	       else
+           {
+			r2->next=NULL;
+	       }
+	       count2++;
+	}
+	else
+	{
+		if(f3==NULL)
+		{
+			f3 = k;
+			r3 = k;
+		}
+        else
+        {
+			r3->next=k;
+			r3=k;
+		}
+		if(r2!=NULL)
+		{
+			r2->next=f3;
+		} else if(r1!=NULL) {
+			r1->next=f3;
+		}
+		r3->next=NULL;
+		count3++;
+	}
+}
+void del() {
+	if(count1!=0) {
+		if(count1>1) {
+			f1 = f1->next;
+			count1--;
+		} else if(count1==1) {
+			f1=NULL;
+			r1=NULL;
+			count1--;
+		}
+	} else if(count2!=0) {
+		if(count2>1) {
+			f2 = f2->next;
+			count2--;
+		} else if(count2==1) {
+			f2=NULL;
+			r2=NULL;
+			count2--;
+		}
+	} else if(count3!=0) {
+		f3=NULL;
+		r3=NULL;
+		count3--;
+	} else {
+		printf("\nQueue Underflow");
+	}
+}
+void display() {
+    printf("\nData\tPriority\n");
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+	if(f1!=NULL) {
+		p=f1;
+	} else if(f2!=NULL) {
+		p=f2;
+	} else if(f3!=NULL) {
+		p=f3;
+	} else {
+		printf("\nQueue Underflow\n");
+		return;
+	}
+	do {
+		printf("\n%d \t %d",p->data,p->priority);
+		p=p->next;
+	}while(p!=NULL);
+	printf("\n");
+}
+	int main()
+{
+int x=0;
+while(x<4)
+{
+printf("\nMENU\n1.INSERT\n2.DELETE\n3.Display\n");
+printf("Enter Your choice : ");
+scanf("%d",&x);
+switch(x)
+{
+case 1: insert();
+break;
+case 2: del();
+break;
+case 3: display();
+break;
+case 4 : break;
+default : printf("Wrong choice");
+break;
+
+}
+
+}
+return 0;
+}
